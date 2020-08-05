@@ -76,6 +76,7 @@ public class ConfigurationPanel extends JPanel {
         add(txtDirectory, gridBagConstraints);
 
         btnLocalDirectory.setText(Configurator.getConfigurator().getProperty("btnLocalDirectory"));
+        btnLocalDirectory.setIcon(new ImageIcon(getClass().getResource("/over/res/img/opt_open_file.png")));
         btnLocalDirectory.setMaximumSize(new Dimension(120, 30));
         btnLocalDirectory.setMinimumSize(new Dimension(120, 30));
         btnLocalDirectory.setName("btnLocalDirectory");

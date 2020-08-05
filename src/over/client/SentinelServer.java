@@ -7,6 +7,8 @@ import over.controller.format.FontEditor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,8 +35,6 @@ public class SentinelServer extends JFrame {
     }
     
     private void initComponents() {
-        GridBagConstraints gridBagConstraints;
-
         mainPanel = new JPanel();
         scrollConsole = new JScrollPane();
         txtConsole = new JTextPane();
@@ -47,6 +47,10 @@ public class SentinelServer extends JFrame {
         helpMenu = new JMenu();
         aboutOption = new JMenuItem();
 
+        GridBagConstraints gridBagConstraints;
+
+        setTitle(Configurator.getConfigurator().getProperty("clientName"));
+        setName("frmSentinel");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new Dimension(400, 400));
         setMinimumSize(new Dimension(400, 400));
@@ -77,6 +81,7 @@ public class SentinelServer extends JFrame {
 
         btnStart.setText(Configurator.getConfigurator().getProperty("btnStart"));
         btnStart.setName("btnStart");
+        btnStart.setIcon(new ImageIcon(getClass().getResource("/over/res/img/opt_start.png")));
         btnStart.addActionListener((ActionEvent evt) -> initFileMonitor());
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -89,30 +94,44 @@ public class SentinelServer extends JFrame {
 
         menuBar.setName("menuBar");
 
+        fileMenu.setMnemonic('F');
         fileMenu.setText(Configurator.getConfigurator().getProperty("fileMenu"));
         fileMenu.setName("fileMenu");
 
+        exitOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
+        exitOption.setMnemonic('E');
         exitOption.setText(Configurator.getConfigurator().getProperty("exitOption"));
         exitOption.setName("exitOption");
+        exitOption.setIcon(new ImageIcon(getClass().getResource("/over/res/img/opt_exit.png")));
+        exitOption.addActionListener(e -> System.exit(0));
         fileMenu.add(exitOption);
 
         menuBar.add(fileMenu);
 
+        settingsMenu.setMnemonic('S');
         settingsMenu.setText(Configurator.getConfigurator().getProperty("settingsMenu"));
         settingsMenu.setName("settingsMenu");
 
+        configOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+        configOption.setMnemonic('O');
         configOption.setText(Configurator.getConfigurator().getProperty("configOption"));
         configOption.setName("configOption");
+        configOption.setIcon(new ImageIcon(getClass().getResource("/over/res/img/opt_settings_gray.png")));
         configOption.addActionListener((ActionEvent evt) -> initLocalDirectory());
         settingsMenu.add(configOption);
 
         menuBar.add(settingsMenu);
 
+        helpMenu.setMnemonic('H');
         helpMenu.setText(Configurator.getConfigurator().getProperty("helpMenu"));
         helpMenu.setName("helpMenu");
 
+        aboutOption.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+        aboutOption.setMnemonic('A');
         aboutOption.setText(Configurator.getConfigurator().getProperty("aboutOption"));
         aboutOption.setName("aboutOption");
+        aboutOption.setIcon(new ImageIcon(getClass().getResource("/over/res/img/opt_about.png")));
+        aboutOption.addActionListener(e -> new About().setVisible(true));
         helpMenu.add(aboutOption);
 
         menuBar.add(helpMenu);
@@ -126,13 +145,23 @@ public class SentinelServer extends JFrame {
     private synchronized void initFileMonitor() {
         if(btnStart.isSelected()) {
             if(FileMonitor.getLocalDirectory() != null) {
+                fontEditor.setBold(txtConsole, Configurator.getConfigurator().getProperty("message02") + "\n");
+
+                btnStart.setText(Configurator.getConfigurator().getProperty("btnStop"));
+                btnStart.setIcon(new ImageIcon(getClass().getResource("/over/res/img/opt_stop.png")));
+
                 startFileMonitor();
             }
             else
                 JOptionPane.showMessageDialog(this, Configurator.getConfigurator().getProperty("message01"), Configurator.getConfigurator().getProperty("title01"), JOptionPane.INFORMATION_MESSAGE);
         }
         else {
+            fontEditor.setBold(txtConsole, Configurator.getConfigurator().getProperty("message03") + "\n");
+
             stopFileMonitor();
+
+            btnStart.setText(Configurator.getConfigurator().getProperty("btnStart"));
+            btnStart.setIcon(new ImageIcon(getClass().getResource("/over/res/img/opt_start.png")));
         }
     }
 
@@ -141,10 +170,6 @@ public class SentinelServer extends JFrame {
     }
 
     private synchronized void startFileMonitor() {
-        fontEditor.setBold(txtConsole, Configurator.getConfigurator().getProperty("message02") + "\n");
-
-        btnStart.setText(Configurator.getConfigurator().getProperty("btnStop"));
-
         Runnable task = () -> {
             try {
                 FileMonitor.initFileMonitor();
@@ -162,8 +187,6 @@ public class SentinelServer extends JFrame {
     }
 
     private synchronized void stopFileMonitor() {
-        fontEditor.setBold(txtConsole, Configurator.getConfigurator().getProperty("message03") + "\n");
-
         try {
             scheduler.shutdown();
             scheduler.awaitTermination(1, TimeUnit.SECONDS);
@@ -171,8 +194,6 @@ public class SentinelServer extends JFrame {
         catch (Exception e) {
             e.printStackTrace();
         }
-
-        btnStart.setText(Configurator.getConfigurator().getProperty("btnStart"));
     }
 
     public static void main(String args[]) {

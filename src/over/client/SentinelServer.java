@@ -25,9 +25,9 @@ public class SentinelServer extends JFrame {
     private JMenuBar menuBar;
     private JScrollPane scrollConsole;
     private JMenu settingsMenu;
-    private JTextPane txtConsole;
+    private static JTextPane txtConsole;
     private ScheduledExecutorService scheduler;
-    private FontEditor fontEditor;
+    private static FontEditor fontEditor;
     
     public SentinelServer() {
         initComponents();
@@ -152,8 +152,11 @@ public class SentinelServer extends JFrame {
 
                 startFileMonitor();
             }
-            else
+            else {
                 JOptionPane.showMessageDialog(this, Configurator.getConfigurator().getProperty("message01"), Configurator.getConfigurator().getProperty("title01"), JOptionPane.INFORMATION_MESSAGE);
+
+                btnStart.setSelected(false);
+            }
         }
         else {
             fontEditor.setBold(txtConsole, Configurator.getConfigurator().getProperty("message03") + "\n");
@@ -166,7 +169,7 @@ public class SentinelServer extends JFrame {
     }
 
     private void initLocalDirectory() {
-        JOptionPane.showConfirmDialog(null, new ConfigurationPanel(), Configurator.getConfigurator().getProperty("title02"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        new ConfigurationPanel().setVisible(true);
     }
 
     private synchronized void startFileMonitor() {
@@ -194,6 +197,12 @@ public class SentinelServer extends JFrame {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static synchronized void addMessage(String path) {
+        String message = Configurator.getConfigurator().getProperty("message04");
+
+        fontEditor.setSimple(txtConsole, message + " " + path + "\n");
     }
 
     public static void main(String args[]) {

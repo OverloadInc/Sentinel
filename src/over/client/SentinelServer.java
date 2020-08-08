@@ -14,6 +14,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <code>SentinelServer</code> class implements a <code>JFrame</code> with the <code>Sentinel</code> application
+ * graphical user interface.
+ *
+ * @author Overload Inc.
+ * @version 1.0, 08 Aug 2020
+ */
 public class SentinelServer extends JFrame {
     private JMenuItem aboutOption;
     private JToggleButton btnStart;
@@ -28,12 +35,18 @@ public class SentinelServer extends JFrame {
     private static JTextPane txtConsole;
     private ScheduledExecutorService scheduler;
     private static FontEditor fontEditor;
-    
+
+    /**
+     * Class constructor.
+     */
     public SentinelServer() {
         initComponents();
         fontEditor = new FontEditor();
     }
-    
+
+    /**
+     * Initializes the GUI components.
+     */
     private void initComponents() {
         mainPanel = new JPanel();
         scrollConsole = new JScrollPane();
@@ -142,7 +155,10 @@ public class SentinelServer extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private synchronized void initFileMonitor() {
+    /**
+     * Starts the file monitor working.
+     */
+    private void initFileMonitor() {
         if(btnStart.isSelected()) {
             if(FileMonitor.getLocalDirectory() != null) {
                 fontEditor.setBold(txtConsole, Configurator.getConfigurator().getProperty("message02") + "\n");
@@ -168,11 +184,17 @@ public class SentinelServer extends JFrame {
         }
     }
 
+    /**
+     * Opens a new windows to establish the <code>Sentinel</code>'s configuration parameters.
+     */
     private void initLocalDirectory() {
         new ConfigurationPanel().setVisible(true);
     }
 
-    private synchronized void startFileMonitor() {
+    /**
+     * Executes the <code>Sentinel</code>'s monitor to detect new incoming files.
+     */
+    private void startFileMonitor() {
         Runnable task = () -> {
             try {
                 FileMonitor.initFileMonitor();
@@ -189,7 +211,10 @@ public class SentinelServer extends JFrame {
         scheduler.scheduleWithFixedDelay(task, 1, 1, TimeUnit.SECONDS);
     }
 
-    private synchronized void stopFileMonitor() {
+    /**
+     * Stops the <code>Sentinel</code>'s monitor.
+     */
+    private void stopFileMonitor() {
         try {
             scheduler.shutdown();
             scheduler.awaitTermination(1, TimeUnit.SECONDS);
@@ -199,12 +224,20 @@ public class SentinelServer extends JFrame {
         }
     }
 
-    public static synchronized void addMessage(String path) {
+    /**
+     * Adds a new message to the <code>Sentinel</code>'s console.
+     * @param path the file path detected.
+     */
+    public static void addMessage(String path) {
         String message = Configurator.getConfigurator().getProperty("message04");
 
         fontEditor.setSimple(txtConsole, message + " " + path + "\n");
     }
 
+    /**
+     * The <code>Sentinel</code>'s starting point.
+     * @param args the initial parameters.
+     */
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

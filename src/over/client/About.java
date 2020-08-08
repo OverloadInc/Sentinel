@@ -7,7 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * About class implements a JFrame with the Sentinel application developers' information.
+ * <code>About</code> class implements a <code>JFrame</code> with the <code>Sentinel</code> application developers' information.
+ *
+ * @author Overload Inc.
+ * @version 1.0, 08 Aug 2020
  */
 public class About extends JFrame {
     private JPanel aboutPanel;
@@ -29,7 +32,7 @@ public class About extends JFrame {
     }
 
     /**
-     * Initializes the JFrame components.
+     * Initializes the <code>JFrame</code> components.
      */
     private void initComponents() {
         softwarePanel = new JPanel();

@@ -10,6 +10,13 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * <code>ConfigurationPanel</code> class builds a <code>JPanel</code> to enter the configuration data necessary to
+ * monitor a specific local directory for new incoming files.
+ *
+ * @author Overload Inc.
+ * @version 1.0, 08 Aug 2020
+ */
 public class ConfigurationPanel extends JFrame {
     private JPanel mainPanel;
     private JButton btnAccept;
@@ -26,6 +33,9 @@ public class ConfigurationPanel extends JFrame {
     private static String fileType;
     private static File localDirectory;
 
+    /**
+     * Class constructor.
+     */
     public ConfigurationPanel() {
         System.out.println("ConfigurationPanel: " + fileType);
 
@@ -50,6 +60,10 @@ public class ConfigurationPanel extends JFrame {
         initComponents();
     }
 
+    /**
+     * Builds a <code>JPanel</code> to enter the local directory to monitor changes and
+     * the file type to transfer.
+     */
     private void initComponents() {
         GridBagConstraints gridBagConstraints;
 
@@ -175,6 +189,9 @@ public class ConfigurationPanel extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Sets the local directory to monitor new incoming files.
+     */
     private void setLocalDirectory() {
         fileChooser = new JFileChooser();
 
@@ -194,6 +211,9 @@ public class ConfigurationPanel extends JFrame {
         FileMonitor.setLocalDirectory(path);
     }
 
+    /**
+     * Sets the file type entered by the user.
+     */
     private void accept() {
         FileMonitor.setFileType(txtFileType.getText());
         this.dispose();

@@ -8,7 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <code>FontEditor</code> class provides a mechanism to set the font style used in the chat console.
+ * <code>FontEditor</code> class provides a mechanism to set the font style used in the
+ * <code>Sentinel</code>'s message console.
  *
  * @author Overload Inc.
  * @version 1.0, 08 Aug 2020

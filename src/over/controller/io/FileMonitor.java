@@ -11,6 +11,9 @@ import java.util.Map;
 /**
  * The <code>FileMonitor</code> class encapsulates the mechanism necessary to keep monitoring a specific local
  * directory and detecting new incoming files.
+ *
+ * @author Overload Inc.
+ * @version 1.0, 08 Aug 2020
  */
 public class FileMonitor {
 
@@ -94,6 +97,7 @@ public class FileMonitor {
 
             if (filter(child) != null) {
                 SentinelServer.addMessage(child.toString());
+                new FileSender(child).send();
             }
         }
     }
